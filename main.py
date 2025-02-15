@@ -16,6 +16,7 @@ intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 queue = []
+banned_words = ["fuck", "nigger", "nigga", "kkr", "kanker", "asshole", "@sshole",]
 
 @bot.command(name="shutdown")
 @has_permissions(administrator=True)
