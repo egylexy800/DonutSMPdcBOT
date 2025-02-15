@@ -1,6 +1,6 @@
+import os
 import discord
 from discord.ext import commands
-from apikeys import *
 from discord import member
 from discord import Permissions
 from discord.ext.commands import has_permissions, MissingPermissions
@@ -14,6 +14,10 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)
+
+discord_token = os.getenv('DISCORD_TOKEN')
+discord_welcome = os.getenv('WELCOME')
+discord_logs = os.getenv('LOGS')
 
 queue = []
 banned_words = ["fuck", "nigger", "nigga", "kkr", "kanker", "asshole", "@sshole",]
@@ -96,7 +100,7 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    channel = bot.get_channel(Welcome)
+    channel = bot.get_channel(discord_welcome)
     if channel:
         embed = discord.Embed(
             title="Welcome to the server! 🎉",
@@ -224,7 +228,7 @@ async def on_message(message):
     if any(word in message.content.lower() for word in banned_words):
         await message.delete()
 
-        log_channel = bot.get_channel(log_channel_id)
+        log_channel = bot.get_channel(discord_logs)
         if log_channel:
             embed = discord.Embed(
                 title="Automod Log",
@@ -253,4 +257,4 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
-bot.run(token)
+bot.run(discord_token)
