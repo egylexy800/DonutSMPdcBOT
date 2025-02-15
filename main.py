@@ -256,5 +256,7 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+thread = threading.Thread(target=run_bot)
+thread.start()
 
 bot.run(discord_token)
