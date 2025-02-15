@@ -9,6 +9,7 @@ import yt_dlp
 import asyncio
 import signal
 import sys
+import threading
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -256,7 +257,8 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+def run_bot():
+    bot.run(discord_token)
+
 thread = threading.Thread(target=run_bot)
 thread.start()
-
-bot.run(discord_token)
