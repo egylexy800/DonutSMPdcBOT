@@ -31,16 +31,19 @@ class punishments(commands.Cog):
             await ctx.send("```❌ Invalid time format. Please provide a valid number of seconds.❌```")
             
     @ban.error
-    async def ban_error(ctx, error):
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send(f"```❌ You don't have permission to ban users! ❌```")
+    async def ban_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            if error.param.name == 'member':
+                await ctx.send(f"```⚠️ member is a required argument that is missing.```")
+        elif isinstance(error, commands.MissingPermissions):
+            await ctx.send("```❌ You don't have permission to ban users! ❌```")
         elif isinstance(error, commands.BotMissingPermissions):
-            await ctx.send(f"```❌ I don't have permission to ban users! ❌```")
+            await ctx.send("```❌ I don't have permission to ban users! ❌```")
         else:
             await ctx.send(f"```⚠️ {error}```")
 
     @kick.error
-    async def kick_error(ctx, error):
+    async def kick_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("```❌ You don't have permission to kick users! ❌```")
         elif isinstance(error, commands.BotMissingPermissions):

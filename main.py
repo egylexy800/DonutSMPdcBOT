@@ -2,11 +2,7 @@ import os
 import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions, MissingPermissions
-import asyncio
-import logging
 import apikeys
-
-logging.basicConfig(level=logging.INFO) 
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -25,17 +21,22 @@ async def shutdown_command(ctx):
     await ctx.send("```Shutting down...```")
     await bot.close()
 
-async def load_cogs():
+async def load_extensions():
+    initial_extensions = []
+    
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
-            await bot.load_extension(f"cogs.{filename[:-3]}")
+            initial_extensions.append(f'cogs.{filename[:-3]}')
 
-async def main():
-    async with bot:
-        await load_cogs()
-        await bot.start(apikeys.bot_token)
+    for extension in initial_extensions:
+        try:
+            await bot.load_extension(extension)
+        except Exception as e:
+            print(f"Failed to load extension {extension}: {e}")
 
-try:
-    asyncio.run(main())
-except KeyboardInterrupt:
-    print("\nBot manually stopped. Exiting cleanly...")
+async def setup_hook():
+    await load_extensions()
+
+bot.setup_hook = setup_hook
+
+bot.run(apikeys.bot_token)
