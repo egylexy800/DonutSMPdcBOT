@@ -11,4 +11,10 @@ discord_logs = Channel ID of your logs channel here
 
 
 queue = []
+
+
+
+
+
+
 banned_words = ["example1", "example2", "etc."]
