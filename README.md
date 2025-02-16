@@ -7,6 +7,16 @@ bot_token= "your-bot-token-here"
 
 
 discord_welcome = Channel ID of your welcom channel here
+
+
+
+
+
+
+
+
+
+
 discord_logs = Channel ID of your logs channel here
 
 
