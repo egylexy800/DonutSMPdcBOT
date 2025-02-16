@@ -1,6 +1,6 @@
-import discord
-from discord.ext import commands
-from discord.ext.commands import has_permissions, MissingPermissions
+import nextcord
+from nextcord.ext import commands
+from nextcord.ext.commands import has_permissions, MissingPermissions
 
 class other(commands.Cog):
     def __init__(self, bot):
@@ -8,7 +8,7 @@ class other(commands.Cog):
 
     @commands.command()
     @has_permissions(manage_roles=True)
-    async def addRole(self, ctx, user: discord.Member, *, role: discord.Role):
+    async def addRole(self, ctx, user: nextcord.Member, *, role: nextcord.Role):
         if role in user.roles:
             await ctx.send(f"```⚠️ {user.mention} already has the {role} role! ⚠️```")
         else:
@@ -17,7 +17,7 @@ class other(commands.Cog):
 
     @commands.command()
     @has_permissions(manage_roles=True)
-    async def removeRole(self, ctx, user: discord.Member, *, role: discord.Role):
+    async def removeRole(self, ctx, user: nextcord.Member, *, role: nextcord.Role):
         if role in user.roles:
             await user.remove_roles(role)
             await ctx.send(f"```✅ The role {role} has been removed from {user.mention}! ✅```")
@@ -54,5 +54,5 @@ class other(commands.Cog):
         else:
             await ctx.send(f"```⚠️ {error}```")
 
-async def setup(bot):
-    await bot.add_cog(other(bot))
+def setup(bot):
+    bot.add_cog(other(bot))

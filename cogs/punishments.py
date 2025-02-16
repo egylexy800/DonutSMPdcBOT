@@ -1,6 +1,6 @@
-import discord
-from discord.ext import commands
-from discord.ext.commands import has_permissions, MissingPermissions
+import nextcord
+from nextcord.ext import commands
+from nextcord.ext.commands import has_permissions, MissingPermissions
 
 class punishments(commands.Cog):
     def __init__(self, bot):
@@ -8,19 +8,19 @@ class punishments(commands.Cog):
 
     @commands.command()
     @has_permissions(ban_members=True)
-    async def ban(self, ctx, member: discord.Member, *, reason=None):
+    async def ban(self, ctx, member: nextcord.Member, *, reason=None):
         await member.ban(reason=reason)
         await ctx.send(f"```✅ User {member} has been banned. ✅```")
         
     @commands.command()
     @has_permissions(kick_members=True)
-    async def kick(self, ctx, member: discord.Member, *, reason=None):
+    async def kick(self, ctx, member: nextcord.Member, *, reason=None):
         await member.kick(reason=reason)
         await ctx.send(f"```✅ User {member} has been kicked. ✅```")
         
     @commands.command()
     @has_permissions(moderate_members=True)
-    async def mute(self, ctx, member: discord.Member, *, time: str, reason=None):
+    async def mute(self, ctx, member: nextcord.Member, *, time: str, reason=None):
         try:
             time_seconds = int(time)
             timeout_duration = self.timedelta(seconds=time_seconds)
@@ -51,5 +51,5 @@ class punishments(commands.Cog):
         else:
             await ctx.send(f"```⚠️ {error}```")
 
-async def setup(bot):
-    await bot.add_cog(punishments(bot))
+def setup(bot):
+    bot.add_cog(punishments(bot))

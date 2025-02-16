@@ -1,6 +1,6 @@
-import discord
-from discord.ext import commands
-from discord.ext.commands import has_permissions
+import nextcord
+from nextcord.ext import commands
+from nextcord.ext.commands import has_permissions
 import yt_dlp
 import asyncio
 import apikeys
@@ -63,7 +63,7 @@ class voicemusic(commands.Cog):
                 'options': '-vn'
             }
             ctx.voice_client.play(
-                discord.FFmpegOpusAudio(url, executable="ffmpeg", before_options=ffmpeg_options, options="-filter:a 'volume=0.3'"),
+                nextcord.FFmpegOpusAudio(url, executable="ffmpeg", before_options=ffmpeg_options, options="-filter:a 'volume=0.3'"),
                 after=lambda e: asyncio.run_coroutine_threadsafe(self.play_next(ctx), self.bot.loop)
             )
             await ctx.send(f"```🎶 Now playing: {title}```")
@@ -85,5 +85,5 @@ class voicemusic(commands.Cog):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("```❌ You need to be an admin to skip songs! ❌```")
 
-async def setup(bot):
-    await bot.add_cog(voicemusic(bot))
+def setup(bot):
+    bot.add_cog(voicemusic(bot))

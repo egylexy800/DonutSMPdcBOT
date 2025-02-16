@@ -1,5 +1,5 @@
-import discord
-from discord.ext import commands
+import nextcord
+from nextcord.ext import commands
 
 class Welcome(commands.Cog):
     def __init__(self, bot):
@@ -9,15 +9,15 @@ class Welcome(commands.Cog):
     async def on_member_join(self, member):
         channel = self.bot.get_channel(1327579220351909919)  # Welcome channel
         if channel:
-            embed = discord.Embed(
+            embed = nextcord.Embed(
                 title="Welcome to the server! 🎉",
                 description=f"Hey {member.mention}, we're glad to have you here! Make sure to check out the rules and have fun!",
-                color=discord.Color.purple()
+                color=nextcord.Color.purple()
             )
             embed.set_thumbnail(url=member.avatar.url if member.avatar else member.default_avatar.url)
             embed.set_image(url="https://t3.ftcdn.net/jpg/08/27/83/92/360_F_827839207_iiFo5GnspGvSrH3Mg2viMnG2cAhddDgM.jpg")
             embed.set_footer(text=f"Enjoy your stay, {member.name}!", icon_url=member.avatar.url if member.avatar else member.default_avatar.url)
             await channel.send(embed=embed)
 
-async def setup(bot):
-    await bot.add_cog(Welcome(bot))
+def setup(bot):
+    bot.add_cog(Welcome(bot))
