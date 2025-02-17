@@ -1,7 +1,8 @@
 import nextcord
 from nextcord.ext import commands
 import apikeys
-import logging
+import aiohttp
+import os
 
 intents = nextcord.Intents.default()
 intents.message_content = True
@@ -14,11 +15,20 @@ async def on_ready():
     print("The bot is now ready for use!")
     print("-----------------------------")
 
+@bot.slash_command(name="shutdown", description="Shuts down the bot.")
+async def shutdown(interaction: nextcord.Interaction):
+    await interaction.send("```Shutting down bot...```")
+    await bot.close()
+    await aiohttp.ClientSession().close()
+
+initial_extension = []
+
+for filename in os.listdir('./cogs'):
+    if filename.endswith('.py'):
+        initial_extension.append("cogs."+ filename[:-3])
+        
 if __name__ == "__main__":
-    bot.load_extension('cogs.automod')
-    bot.load_extension('cogs.other')
-    bot.load_extension('cogs.punishments')
-    bot.load_extension('cogs.voicemusic')
-    bot.load_extension('cogs.welcome')
+    for extension in initial_extension:
+        bot.load_extension(extension)
 
 bot.run(apikeys.bot_token)
