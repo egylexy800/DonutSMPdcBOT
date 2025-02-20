@@ -44,7 +44,5 @@ class automod(commands.Cog):
 
             await message.channel.send("Don't send that again!")
 
-        #await self.bot.process_commands(message)
-
 def setup(bot):
     bot.add_cog(automod(bot))
