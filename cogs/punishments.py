@@ -16,7 +16,7 @@ class punishments(commands.Cog):
         default_member_permissions=nextcord.Permissions(ban_members=True)
     )
     async def ban(self, interaction: nextcord.Interaction, member: nextcord.User, *, reason=None):
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.defer()
 
         guild_member = interaction.guild.get_member(member.id)
         reason = reason or "No reason provided."
@@ -39,15 +39,14 @@ class punishments(commands.Cog):
 
         embed = nextcord.Embed(
             title=f"{waringemoji} `User Banned` {waringemoji}",
-            description=f"{guild_member.mention} has been banned from the server.\nReason: **{reason}** \n────────────",
+            description=f"{guild_member.mention} has been banned from the server.\nReason: **{reason}** \n`────────────`",
             color=nextcord.Color.red(),
             timestamp=nextcord.utils.utcnow()
         )
         embed.set_thumbnail(url=guild_member.display_avatar.url)
         embed.set_footer(text=f"Banned by {interaction.user.name}", icon_url=interaction.user.display_avatar.url)
         
-        await interaction.followup.send(f"{checkmark}`Succesfully banned`{checkmark}")
-        await interaction.channel.send(embed=embed)
+        await interaction.followup.send(embed=embed)
          
 
         
@@ -58,21 +57,20 @@ class punishments(commands.Cog):
         )
     async def kick(self, interaction:nextcord.Interaction, member: nextcord.User, *, reason=None):
         
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.defer()
                 
         guild_member = interaction.guild.get_member(member.id)
         
         await guild_member.kick(reason=reason)
         embed = nextcord.Embed(
                 title=f"{waringemoji} `User Kicked` {waringemoji}",
-                description=f"{guild_member.mention} has been kicked from the server.\nReason: **{reason}** \n────────────",
+                description=f"{guild_member.mention} has been kicked from the server.\nReason: **{reason}** \n`────────────`",
                 color=nextcord.Color.red(),
                 timestamp=nextcord.utils.utcnow()
                 )
         embed.set_thumbnail(url=guild_member.display_avatar.url)
         embed.set_footer(text=f"Kicked by {interaction.user.name}", icon_url=interaction.user.display_avatar.url)
-        await interaction.followup.send(f"{checkmark}`Succesfully kicked`{checkmark}")
-        await interaction.channel.send(embed=embed)
+        await interaction.followup.send(embed=embed)
         
     @nextcord.slash_command(
         name="mute",
@@ -80,10 +78,16 @@ class punishments(commands.Cog):
         default_member_permissions=nextcord.Permissions(moderate_members=True)
     )
     async def mute(self, interaction: nextcord.Interaction, member: nextcord.User, *, time: str, reason=None):
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.defer()
         
         if interaction.user.top_role <= member.top_role:
-            await interaction.followup.send("```❌ You cannot mute someone with an equal or higher role. ❌```", ephemeral=True)
+            role_embed = nextcord.Embed(
+                title=f"{waringemoji} `Error!` {waringemoji}",
+                description="You cannot mute a user with a higher or equal role. \n`─────────────────────`",
+                color=nextcord.Color.red(),
+                timestamp=nextcord.utils.utcnow()
+            )
+            await interaction.followup.send(embed=role_embed)
             return
         
         guild_member = interaction.guild.get_member(member.id)
@@ -92,7 +96,13 @@ class punishments(commands.Cog):
             unit = time[-1].lower()
             amount = int(time[:-1])
         except (ValueError, IndexError):
-            await interaction.followup.send("```❌ Invalid time format. Please use a number followed by a unit (m for minutes, h for hours, or d for days). ❌```", delete_after=3)
+            timevalue_embed = nextcord.Embed(
+                title=f"{waringemoji} `Error!` {waringemoji}",
+                description="Invalid time value. Please use a valid time value. \n`─────────────────────`",
+                color=nextcord.Color.red(),
+                timestamp=nextcord.utils.utcnow()
+            )
+            await interaction.followup.send(embed=timevalue_embed)
             return
 
         if unit == 'm':
@@ -102,7 +112,13 @@ class punishments(commands.Cog):
         elif unit == 'd':
             seconds = amount * 86400
         else:
-            await interaction.followup.send("```❌ Invalid time unit. Use m for minutes, h for hours, or d for days. ❌```", delete_after=3)
+            unitvalue_embed = nextcord.Embed(
+                title=f"{waringemoji} `Error!` {waringemoji}",
+                description="Invalid time unit. Please use a valid time unit. \n`─────────────────────`",
+                color=nextcord.Color.red(),
+                timestamp=nextcord.utils.utcnow()
+            )
+            await interaction.followup.send(embed=unitvalue_embed)
             return
 
         timeout_duration = timedelta(seconds=seconds)
@@ -115,8 +131,7 @@ class punishments(commands.Cog):
                 )
         embed.set_thumbnail(url=guild_member.display_avatar.url)
         embed.set_footer(text=f"Muted by {interaction.user.name}", icon_url=interaction.user.display_avatar.url)
-        await interaction.followup.send(f"{checkmark}`Succesfully Muted`{checkmark}")
-        await interaction.channel.send(embed=embed)
+        await interaction.followup.send(embed=embed)
             
     @ban.error
     async def ban_error(self, interaction: nextcord.Interaction, error: Exception):
